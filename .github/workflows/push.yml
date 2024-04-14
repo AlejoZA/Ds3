@@ -1,0 +1,56 @@
+name: Push Docker images
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-api-img:
+    runs-on: ubuntu-latest
+    name: 'Actualizando imagen en Dockerhub del API gateway.'
+    steps:
+      - uses: Criser2013/dockerhub-push@v1
+        with:
+          path: './gateway'
+          repositorio: ${{ secrets.DOCKER_API_GATE }}
+          version: ${{ github.ref_name }}
+
+  build-cuentas-img:
+    runs-on: ubuntu-latest
+    name: 'Actualizando imagen en Dockerhub del microservicio de cuentas.'
+    steps:
+      - uses: Criser2013/dockerhub-push@v1
+        with:
+          path: './cuentas'
+          repositorio: ${{ secrets.DOCKER_CUENTAS }}
+          version: ${{ github.ref_name }}
+    
+  build-carrito-img:
+    runs-on: ubuntu-latest
+    name: 'Actualizando imagen en Dockerhub del microservicio del carrito.'
+    steps:
+      - uses: Criser2013/dockerhub-push@v1
+        with:
+          path: './carrito'
+          repositorio: ${{ secrets.DOCKER_CARRITO }}
+          version: ${{ github.ref_name }}
+  
+  build-pagos-img:
+    runs-on: ubuntu-latest
+    name: 'Actualizando imagen en Dockerhub del microservicio de pagos.'
+    steps:
+      - uses: Criser2013/dockerhub-push@v1
+        with:
+          path: './cuentas'
+          repositorio: ${{ secrets.DOCKER_PAGOS }}
+          version: ${{ github.ref_name }}
+  
+  build-productos-img:
+    runs-on: ubuntu-latest
+    name: 'Actualizando imagen en Dockerhub del microservicio de productos.'
+    steps:
+      - uses: Criser2013/dockerhub-push@v1
+        with:
+          path: './cuentas'
+          repositorio: ${{ secrets.DOCKER_PRODUCTOS }}
+          version: ${{ github.ref_name }}
