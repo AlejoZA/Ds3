@@ -16,6 +16,9 @@ class CustomUser(AbstractUser):
     bio = models.TextField(_('Bio'), max_length=500, blank=True)
     short_bio = models.TextField(_('Short Bio'), max_length=250, blank=True)
     source = models.CharField(_('source'), max_length=50, blank=True)
+    cedula = models.CharField(_('Cedula'), max_length=20, blank=True)
+    telefono = models.CharField(_('Telefono'), max_length=20, blank=True)
+    direccion = models.CharField(_('Direccion'), max_length=100, blank=True)
 
 
 class OtpCode(models.Model):

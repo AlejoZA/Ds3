@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import validate_email
 from django import forms
 from users.models import OtpCode
+from django.contrib.auth.forms import UserChangeForm
+from .models import CustomUser
 
 
 class CustomLoginForm(forms.Form):
@@ -33,7 +35,6 @@ class CustomLoginForm(forms.Form):
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
-
         self.fields['username'].widget = widgets.TextInput(
             attrs={'placeholder': "username", "class": "form-control"})
         self.fields['email'].widget = widgets.EmailInput(
@@ -42,6 +43,12 @@ class RegisterForm(UserCreationForm):
             attrs={'placeholder': "password", "class": "form-control"})
         self.fields['password2'].widget = widgets.PasswordInput(
             attrs={'placeholder': "repeat password", "class": "form-control"})
+        self.fields['cedula'].widget = widgets.TextInput(
+            attrs={'placeholder': "cedula", "class": "form-control"})
+        self.fields['telefono'].widget = widgets.TextInput(
+            attrs={'placeholder': "telefono", "class": "form-control"})
+        self.fields['direccion'].widget = widgets.TextInput(
+            attrs={'placeholder': "direccion", "class": "form-control"})
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -51,16 +58,16 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("username", "email")
+        fields = ("username", "email", "cedula", "telefono", "direccion", "password1", "password2")
 
 
 class ForgetPasswordEmailCodeForm(forms.Form):
     username_or_email = forms.CharField(max_length=256,
-                                        widget=forms.TextInput(
-                                            attrs={'class': 'form-control',
-                                                   'placeholder': 'Type your username or email'}
-                                        )
-                                        )
+                                         widget=forms.TextInput(
+                                             attrs={'class': 'form-control',
+                                                    'placeholder': 'Type your username or email'}
+                                         )
+                                         )
 
     def clean_username_or_email(self):
         username_or_email = self.cleaned_data['username_or_email']
@@ -131,3 +138,15 @@ class OtpForm(forms.Form):
             )
         else:
             return otp_code
+
+class ProfileEditForm(UserChangeForm):
+    password = forms.CharField(label=_("Password"), strip=False, widget=forms.PasswordInput)
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'cedula', 'telefono', 'direccion']
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
+        # Deshabilitar la edición del campo de correo electrónico
+        self.fields['email'].widget.attrs['readonly'] = True
